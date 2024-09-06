@@ -35,7 +35,7 @@ async def get_user(
 async def add_product_to_basket(
     user_id: int,
     product_id: int,
-    user: User = Depends(get_current_admin_user),
+    user: User = Depends(current_user),
     session: AsyncSession = Depends(get_async_session),
 ):
     if user_id == user.id:
@@ -63,7 +63,7 @@ async def add_product_to_basket(
 async def delete_product_from_basket(
     user_id: int,
     product_id: int,
-    user: User = Depends(get_current_admin_user),
+    user: User = Depends(current_user),
     session: AsyncSession = Depends(get_async_session),
 ):
     if user_id == user.id:
@@ -75,7 +75,7 @@ async def delete_product_from_basket(
 @router.put("/delete_all_products/")
 async def delete_all_products_from_basket(
     user_id: int,
-    user: User = Depends(get_current_admin_user),
+    user: User = Depends(current_user),
     session: AsyncSession = Depends(get_async_session),
 ):
     if user_id == user.id:

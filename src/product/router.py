@@ -7,14 +7,14 @@ from src.models import User
 
 from src.product import crud
 from src.product.schemas import ProductCreate, ProductUpdate, ProductRead
-from src.user.base_config import get_current_admin_user
+from src.user.base_config import get_current_admin_user, current_user
 
 router = APIRouter(prefix="/product", tags=["Product"])
 
 
 @router.get("/products/")
 async def get_all_products(
-    user: User = Depends(get_current_admin_user),
+    user: User = Depends(current_user),
     session: AsyncSession = Depends(get_async_session),
 ):
     return await crud.get_all_products(session)
@@ -23,7 +23,7 @@ async def get_all_products(
 @router.get("/{product_id}/", response_model=ProductRead)
 async def get_product(
     product_id: int,
-    user: User = Depends(get_current_admin_user),
+    user: User = Depends(current_user),
     session: AsyncSession = Depends(get_async_session),
 ):
     return await crud.get_product(product_id, session)
