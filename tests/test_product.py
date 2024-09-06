@@ -3,21 +3,16 @@ from tests.conftest import client
 
 
 def test_create_product():
-    response = client.post("/product/create", json={
-        "name": "string1",
-        "price": 0.0,
-        "is_active": True
-    })
+    response = client.post(
+        "/product/create", json={"name": "string1", "price": 0.0, "is_active": True}
+    )
     assert response.status_code == 200
 
 
-
 async def test_update_product(ac: AsyncClient):
-    response = await ac.put("/product/1/", json={
-        "name": "string2",
-        "price": 1.0,
-        "is_active": True
-    })
+    response = await ac.put(
+        "/product/1/", json={"name": "string2", "price": 1.0, "is_active": True}
+    )
 
     assert response.status_code == 200
 

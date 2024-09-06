@@ -1,4 +1,5 @@
 from fastapi import Depends, HTTPException
+
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,8 +13,7 @@ async def get_user_db(session: AsyncSession = Depends(get_async_session)):
     yield SQLAlchemyUserDatabase(session, User)
 
 
-async def get_user(user_id: int, session: AsyncSession = Depends(get_async_session)
-                   ):
+async def get_user(user_id: int, session: AsyncSession = Depends(get_async_session)):
     """Получает информацию о пользователе с его корзиной и общей стоимостью товаров"""
     query = select(User).where(User.id == user_id)
     result = await session.execute(query)
@@ -30,8 +30,9 @@ async def get_total_price(products):
     return sum([product.price for product in products])
 
 
-async def add_product_to_basket(user_id: int, product_id: int, session: AsyncSession = Depends(get_async_session)
-                                ):
+async def add_product_to_basket(
+    user_id: int, product_id: int, session: AsyncSession = Depends(get_async_session)
+):
     """Добавляет товар в корзину"""
     query_user = select(User).where(User.id == user_id)
     result_user = await session.execute(query_user)
@@ -49,8 +50,9 @@ async def add_product_to_basket(user_id: int, product_id: int, session: AsyncSes
     await session.commit()
 
 
-async def delete_product_from_basket(user_id: int, product_id: int, session: AsyncSession = Depends(get_async_session)
-                                     ):
+async def delete_product_from_basket(
+    user_id: int, product_id: int, session: AsyncSession = Depends(get_async_session)
+):
     """Удаляет товар из корзины"""
     query_user = select(User).where(User.id == user_id)
     result_user = await session.execute(query_user)
@@ -64,9 +66,9 @@ async def delete_product_from_basket(user_id: int, product_id: int, session: Asy
     await session.commit()
 
 
-async def delete_all_products_from_basket(user_id: int,
-                                          session: AsyncSession = Depends(get_async_session)
-                                          ):
+async def delete_all_products_from_basket(
+    user_id: int, session: AsyncSession = Depends(get_async_session)
+):
     """Удаляет все товары из корзины"""
     query_user = select(User).where(User.id == user_id)
     result_user = await session.execute(query_user)

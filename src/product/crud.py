@@ -19,7 +19,7 @@ async def get_product(product_id: int, session):
 
 async def get_all_products(session):
     """Получает все товары"""
-    query = select(Product).where(Product.is_active == True)
+    query = select(Product).where(Product.is_active)
     result = await session.execute(query)
     return result.scalars().all()
 

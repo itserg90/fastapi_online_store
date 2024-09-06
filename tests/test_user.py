@@ -3,15 +3,18 @@ from tests.conftest import client
 
 
 def test_register():
-    response = client.post("/auth/register", json={
-        "email": "user@test.com",
-        "password": "Stringgg!",
-        "is_active": True,
-        "is_superuser": False,
-        "is_verified": False,
-        "full_name": "string",
-        "phone": "+79999999999"
-    })
+    response = client.post(
+        "/auth/register",
+        json={
+            "email": "user@test.com",
+            "password": "Stringgg!",
+            "is_active": True,
+            "is_superuser": False,
+            "is_verified": False,
+            "full_name": "string",
+            "phone": "+79999999999",
+        },
+    )
 
     assert response.status_code == 201
 

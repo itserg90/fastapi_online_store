@@ -3,6 +3,7 @@ from typing import Optional
 from fastapi import Depends, Request
 from fastapi_users import BaseUserManager, IntegerIDMixin
 
+
 from src.models import User
 from src.user.crud import get_user_db
 

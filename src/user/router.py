@@ -1,14 +1,11 @@
-from typing import List
-
 from fastapi import APIRouter, Depends, HTTPException
 
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_async_session
 from src.models import User
 from src.user import crud
-from src.user.base_config import current_user
+from src.user.base_config import current_user, get_current_admin_user
 from src.user.schemas import UserRead
 
 router = APIRouter(prefix="/users", tags=["User"])
@@ -24,21 +21,23 @@ router = APIRouter(prefix="/users", tags=["User"])
 
 
 @router.get("/{user_id}/", response_model=UserRead)
-async def get_user(user_id: int,
-                   user: User = Depends(current_user),
-                   session: AsyncSession = Depends(get_async_session)
-                   ):
+async def get_user(
+    user_id: int,
+    user: User = Depends(current_user),
+    session: AsyncSession = Depends(get_async_session),
+):
     if user_id == user.id:
         return await crud.get_user(user_id, session)
     raise HTTPException(status_code=404, detail="You have no rights")
 
 
 @router.put("/add_product/")
-async def add_product_to_basket(user_id: int,
-                                product_id: int,
-                                user: User = Depends(current_user),
-                                session: AsyncSession = Depends(get_async_session)
-                                ):
+async def add_product_to_basket(
+    user_id: int,
+    product_id: int,
+    user: User = Depends(get_current_admin_user),
+    session: AsyncSession = Depends(get_async_session),
+):
     if user_id == user.id:
         await crud.add_product_to_basket(user_id, product_id, session)
         return {"message": "Product added to basket"}
@@ -61,11 +60,12 @@ async def add_product_to_basket(user_id: int,
 
 
 @router.put("/delete_product/")
-async def delete_product_from_basket(user_id: int,
-                                     product_id: int,
-                                     user: User = Depends(current_user),
-                                     session: AsyncSession = Depends(get_async_session)
-                                     ):
+async def delete_product_from_basket(
+    user_id: int,
+    product_id: int,
+    user: User = Depends(get_current_admin_user),
+    session: AsyncSession = Depends(get_async_session),
+):
     if user_id == user.id:
         await crud.delete_product_from_basket(user_id, product_id, session)
         return {"message": "Product removed from basket"}
@@ -73,10 +73,11 @@ async def delete_product_from_basket(user_id: int,
 
 
 @router.put("/delete_all_products/")
-async def delete_all_products_from_basket(user_id: int,
-                                          user: User = Depends(current_user),
-                                          session: AsyncSession = Depends(get_async_session)
-                                          ):
+async def delete_all_products_from_basket(
+    user_id: int,
+    user: User = Depends(get_current_admin_user),
+    session: AsyncSession = Depends(get_async_session),
+):
     if user_id == user.id:
         await crud.delete_all_products_from_basket(user_id, session)
         return {"message": "All products removed from basket"}

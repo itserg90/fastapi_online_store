@@ -27,6 +27,7 @@ fastapi_users = FastAPIUsers[User, int](
 
 current_user = fastapi_users.current_user()
 
+
 async def get_current_admin_user(user: User = Depends(current_user)):
     if user.is_admin:
         return user

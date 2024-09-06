@@ -4,10 +4,15 @@ from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
 from sqlalchemy import (
     String,
     TIMESTAMP,
-    MetaData, ForeignKey, Integer, Column, Boolean, Float, ARRAY
+    MetaData,
+    ForeignKey,
+    Integer,
+    Column,
+    Boolean,
+    Float,
 )
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, Mapped, mapped_column
+from sqlalchemy.orm import relationship
 
 metadata = MetaData()
 Base = declarative_base()
@@ -25,7 +30,9 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     is_superuser: bool = Column(Boolean, default=False, nullable=False)
     is_verified: bool = Column(Boolean, default=False, nullable=False)
 
-    products = relationship("Product", secondary="product_user", backref='products', lazy="selectin")
+    products = relationship(
+        "Product", secondary="product_user", backref="products", lazy="selectin"
+    )
     total_price_of_products = Column(Float, nullable=True)
 
     is_admin: bool = Column(Boolean, default=False)

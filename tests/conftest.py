@@ -12,15 +12,17 @@ from src.database import get_async_session
 from src.models import Base
 
 from src.main import app
-from src.user.base_config import auth_backend
 
 # DATABASE
 DATABASE_URL_TEST = "sqlite+aiosqlite:///test.db"
 
 engine_test = create_async_engine(DATABASE_URL_TEST, poolclass=NullPool)
-async_session_maker = sessionmaker(engine_test, class_=AsyncSession, expire_on_commit=False)
+async_session_maker = sessionmaker(
+    engine_test, class_=AsyncSession, expire_on_commit=False
+)
 # metadata.bind = engine_test
 # Base.metadata.bind = engine_test
+
 
 async def override_get_async_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_maker() as session:
@@ -30,7 +32,7 @@ async def override_get_async_session() -> AsyncGenerator[AsyncSession, None]:
 app.dependency_overrides[get_async_session] = override_get_async_session
 
 
-@pytest.fixture(autouse=True, scope='session')
+@pytest.fixture(autouse=True, scope="session")
 async def prepare_database():
     async with engine_test.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
@@ -40,7 +42,7 @@ async def prepare_database():
 
 
 # SETUP
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def event_loop(request):
     """Create an instance of the default event loop for each test case."""
     loop = asyncio.get_event_loop_policy().new_event_loop()
