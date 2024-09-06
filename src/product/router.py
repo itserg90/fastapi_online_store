@@ -43,7 +43,7 @@ async def create_product(
 async def update_product(
     product_id: int,
     product: ProductUpdate,
-    # user: User = Depends(get_current_admin_user),
+    user: User = Depends(get_current_admin_user),
     session: AsyncSession = Depends(get_async_session),
 ):
     await crud.update_product(product_id, product, session)
@@ -53,7 +53,7 @@ async def update_product(
 @router.delete("/{product_id}/")
 async def delete_product(
     product_id: int,
-    # user: User = Depends(get_current_admin_user),
+    user: User = Depends(get_current_admin_user),
     session: AsyncSession = Depends(get_async_session),
 ):
     await crud.delete_product(product_id, session)
