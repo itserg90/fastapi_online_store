@@ -9,7 +9,7 @@ from src.product.schemas import ProductCreate, ProductUpdate
 
 async def get_product(product_id: int, session):
     """Получает товар"""
-    query = select(Product).where(Product.id == product_id)
+    query = select(Product).where(Product.id == product_id, Product.is_active)
     result = await session.execute(query)
     db_product = result.scalars().first()
     if not db_product:
